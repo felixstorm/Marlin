@@ -22,9 +22,15 @@ M500
 
 Slicer Settings
 ==========
-* **Initial** Layer Horizontal Expansion: -0.1 (compensate for "elephant's foot")
-* Flow: 90% (after calibration, seems to be the opposite of the adjustment of extruder steps?!)
-* Combing Mode: Not in Skin (to hide visible structures if filament is a bit translucent as my grey one)
+* *Initial* Layer Horizontal Expansion: `-0.1` (compensate for "elephant's foot")
+* Z-Seam Alignment: `Sharpest Corner` (or `Random` for round objects)
+* Flow (%): `90` (after calibration, seems to be the opposite of the adjustment of extruder steps?!)
+* Combing Mode: `Not in Skin` (to hide visible structures if filament is a bit translucent as my grey one)
+* PETG
+  * Heat nozzle and bed in advance to clean debris right before printing
+    * Potentially add `M0 Clean nozzle!` before prime blob?
+  * *Initial* Layer *Flow* (%): `80` (reduced to avoid crumbs)
+  * Combing Mode: `Within Infill` (no outside stringing anymore, but inside still visible) or `Off` (printing takes longer, even less stringing inside but still some visible)
 
 
 Links
