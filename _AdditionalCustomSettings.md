@@ -9,7 +9,7 @@ M92 E100.2
 M92 X80.38 Y80.32 Z402.85
 
 ; Z-Probe Offset (mm)
-M851 Z-1.75
+M851 Z-1.70
 ; Bed-Leveling Fade Height (mm)
 M420 Z10.00
 
@@ -30,18 +30,19 @@ Slicer Settings
   * *Initial* Layer Horizontal Expansion: `-0.1` mm (compensate for "elephant's foot")
   * Flow (%): `90` (after calibration with PLA - seems to be the opposite of the adjustment of extruder steps?!)
 * PETG
-  * **Blue Tape!**
-    * Buildtak verschmilzt sonst mit dem PETG
-    * bei kleinen Teilen ggfs. Brim drucken
+  * **Blue Tape!** - PETG geht von Buildtak nur ganz schwer ab und es bleiben Spuren / Beschädigungen auf dem Buildtak zurück!
+    * nur bei kleinen Teilen bzw. sehr wenig Auflagefläche mit Buildtak (und möglichst auch nicht direkt in der Mitte), da Brim aus PETG schwer vom Object zu entfernen ist (es bricht nicht einfach ab wie bei PLA, sondern hängt sehr fest dran)
   * **Line Width: `0.5` mm**
     * Wall Thickness: `1` mm
-  * *Initial* Layer Horizontal Expansion: `-0.2` mm
-  * Default Printing Temperature: `225` °C (vielleicht irgendwann nochmal einen Temp Tower drucken?)
+  * *Initial* Layer Horizontal Expansion: `-0.2` mm (aber Vorsicht bei sehr kleinen Teilen - die haften dann mangels unterstem Layer schlecht oder gar nicht mehr)
+  * Default Printing Temperature: `230` °C
   * **Flow: `100` %**
-    * Initial Layer Flow: `110` % (matscht ein Bisschen, hält aber besser)
-  * Print Speed: `60` mm/s (sollte Default sein)
+    * Initial Layer Flow: `90` % (damit es nicht so matscht)
+  * Print Speed: `60` mm/s (sollte Default sein), für noch bessere Qualität ggfs. auf `45` oder `30` mm/s reduzieren (macht zeitlich nicht viel aus)
     * Initial Layer Speed: `15` mm/s (hält besser)
-  * Brim/Skirt Minimum Length: `500` mm (damit möglichst aller Dreck abgeht)
+  * Support (geht sonst so schlecht ab)
+    * X/Y Distance: `1` mm
+    * Z Distance: `0.2` mm
   * Wenn es Probleme gibt (z. B. wenn die Fäden nicht aneinander haften und es sehr hässliches Stringing gibt): **Print Speed runter (z.B. auf 15 mm/s) und Flow hoch (z.B. auf 110%)**
 
 Machine Start G-Code
