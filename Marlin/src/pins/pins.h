@@ -461,6 +461,8 @@
 
 #elif MB(ESP32)
   #include "pins_ESP32.h"
+#elif MB(ESP32_FS_ENDER3)
+  #include "pins_ESP32_FS_ENDER3.h"
 
 //
 // Linux Native Debug board

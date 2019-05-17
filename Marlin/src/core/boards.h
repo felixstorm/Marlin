@@ -270,6 +270,7 @@
 // Espressif ESP32 WiFi
 //
 #define BOARD_ESP32            1900
+#define BOARD_ESP32_FS_ENDER3  4711
 
 //
 // Simulations
