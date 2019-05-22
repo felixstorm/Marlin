@@ -2330,8 +2330,7 @@
  */
 //#define WIFISUPPORT
 #if ENABLED(WIFISUPPORT)
-  #define WIFI_SSID "Wifi SSID"
-  #define WIFI_PWD  "Wifi Password"
+  #include "Configuration_wifi.h"
   //#define WEBSUPPORT        // Start a webserver with auto-discovery
   //#define OTASUPPORT        // Support over-the-air firmware updates
 #endif
