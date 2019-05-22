@@ -42,11 +42,11 @@
 #define sq(x) ((x)*(x))
 
 #ifndef SBI
-  #define SBI(A,B) (A |= (1 << (B)))
+  #define SBI(n,b) (n |= _BV(b))
 #endif
 
 #ifndef CBI
-  #define CBI(A,B) (A &= ~(1 << (B)))
+  #define CBI(n,b) (n &= ~_BV(b))
 #endif
 
 #ifndef __AVR__
