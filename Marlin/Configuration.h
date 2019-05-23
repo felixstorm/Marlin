@@ -472,9 +472,9 @@
   //#define DEFAULT_Kd 440
 
   // Creality Ender-3 ESP32_FS
-  #define DEFAULT_Kp 31.37
-  #define DEFAULT_Ki  6.02
-  #define DEFAULT_Kd 40.89
+  #define DEFAULT_Kp 19.79
+  #define DEFAULT_Ki 3.68
+  #define DEFAULT_Kd 26.57
 
 #endif // PIDTEMP
 
@@ -1374,11 +1374,11 @@
  *   M501 - Read settings from EEPROM. (i.e., Throw away unsaved changes)
  *   M502 - Revert settings to "factory" defaults. (Follow with M500 to init the EEPROM.)
  */
-//#define EEPROM_SETTINGS     // Persistent storage with M500 and M501
+#define EEPROM_SETTINGS     // Persistent storage with M500 and M501
 //#define DISABLE_M503        // Saves ~2700 bytes of PROGMEM. Disable for release!
 #define EEPROM_CHITCHAT       // Give feedback on EEPROM commands. Disable to save PROGMEM.
 #if ENABLED(EEPROM_SETTINGS)
-  //#define EEPROM_AUTO_INIT  // Init EEPROM automatically on any errors.
+  #define EEPROM_AUTO_INIT  // Init EEPROM automatically on any errors.
 #endif
 
 //
