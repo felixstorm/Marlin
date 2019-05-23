@@ -33,6 +33,9 @@
 
 #include "../../inc/MarlinConfigPre.h"
 
+#if ANY(EEPROM_SETTINGS,WEBSUPPORT)
+  #include "spiffs.h"
+#endif
 #if ENABLED(WIFISUPPORT)
   #include <ESPAsyncWebServer.h>
   #include "wifi.h"
@@ -43,8 +46,6 @@
     #include "web.h"
     #include "spiffs.h"
   #endif
-#elif ENABLED(EEPROM_SETTINGS)
-  #include "spiffs.h"
 #endif
 
 // --------------------------------------------------------------------------
@@ -97,18 +98,19 @@ void HAL_init(void) {
 
 void HAL_init_board(void) {
 
+  #if ANY(EEPROM_SETTINGS,WEBSUPPORT)
+    spiffs_init();
+  #endif
+
   #if ENABLED(WIFISUPPORT)
     wifi_init();
     #if ENABLED(OTASUPPORT)
       OTA_init();
     #endif
     #if ENABLED(WEBSUPPORT)
-      spiffs_init();
       web_init();
     #endif
     server.begin();
-  #elif ENABLED(EEPROM_SETTINGS)
-    spiffs_init();
   #endif
 
 }
