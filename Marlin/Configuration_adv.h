@@ -2328,11 +2328,11 @@
 /**
  * WiFi Support (Espressif ESP32 WiFi)
  */
-//#define WIFISUPPORT
+#define WIFISUPPORT
 #if ENABLED(WIFISUPPORT)
   #include "Configuration_wifi.h"
-  //#define WEBSUPPORT        // Start a webserver with auto-discovery
-  //#define OTASUPPORT        // Support over-the-air firmware updates
+  #define WEBSUPPORT        // Start a webserver with auto-discovery
+  #define OTASUPPORT        // Support over-the-air firmware updates
 #endif
 
 /**
