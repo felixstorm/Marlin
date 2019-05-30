@@ -9,7 +9,7 @@ M92 E100.2
 M92 X80.38 Y80.32 Z402.85
 
 ; Z-Probe Offset (mm)
-M851 Z-1.32
+M851 Z-1.65
 ; Bed-Leveling Fade Height (mm)
 M420 Z10.00
 
@@ -35,14 +35,19 @@ Slicer Settings
     * Initial Layer Flow: `90` % (damit es nicht so matscht)
   * Print Speed: `60` mm/s (sollte Default sein), für noch bessere Qualität ggfs. auf `45` oder `30` mm/s reduzieren (macht zeitlich nicht viel aus)
     * Initial Layer Speed: `15` mm/s (hält besser)
+  * Combing Mode: `Within Infill` (sonst bildet sich teilweise Stringing, wenn der Extruder z.B. vom Infill über Eck zum Start der Inner Wall fährt und sich dabei dann ein Faden quer rüber spannt)
   * Support (geht sonst so schlecht ab)
     * X/Y Distance: `1` mm
     * Z Distance: `0.2` mm
   * Wenn es Probleme gibt (z. B. wenn die Fäden nicht aneinander haften und es sehr hässliches Stringing gibt): **Print Speed runter (z.B. auf 15 mm/s) und Flow hoch (z.B. auf 110%)**
 
-Machine Start G-Code
+Slicer Machine Settings
 ====================
-(eigentlich nicht mehr notwendig, da UBL im EEPROM gespeichert ist und automatisch eingeschaltet wird nach Boot)
+X (Width): 230
+Y (Depth): 230
+
+Start G-Code
+--------------------
 ```
 ; Ender 3 Custom Start G-code
 G28 ; Home all axes
@@ -77,51 +82,41 @@ slicer. Adjust your new extrusion multiplier to: (extrusion width / measured wal
 * 25 mm Cube: https://www.thingiverse.com/thing:2267549/files
 
 
-Bed Leveling
+Settings
 ====================
 
-Einschalten
-----------
-(eigentlich nicht notwendig, da Status im EEPROM gespeichert wird)
-```
-G29 L0
-M420 S1
-```
+ABL Bilinear / Buildtak
+--------------------
+M503
+  G21    ; Units in mm (mm)
+  M149 C ; Units in Celsius
 
-Leveln
-----------
-```
-M104 S200
-M190 S60
-G28
-G29 P0 T
-G29 P1 T
-G29 P3 T
-G29 S0
-
-G26 B60 H200 Q5
-````
-
-Bed Topography Report
-----------
-```
-M420 V
-
-    (  1,229)                                      (229,229)
-        0       1       2       3       4       5       6
- 6 | +0.323  +0.202  +0.080  +0.135  +0.169  +0.204  +0.239
-   |
- 5 | +0.284  +0.182  +0.080  +0.102  +0.130  +0.157  +0.184
-   |
- 4 | +0.239  +0.162  +0.085  +0.070  +0.090  +0.110  +0.130
-   |
- 3 | +0.259  +0.154  +0.050  +0.008  +0.058  +0.107  +0.157
-   |
- 2 | +0.224  +0.125  +0.025  +0.018  +0.083  +0.147  +0.212
-   |
- 1 | +0.251  +0.169  +0.087  +0.063  +0.117  +0.172  +0.226
-   |
- 0 |[+0.279] +0.214  +0.150  +0.107  +0.152  +0.197  +0.241
-        0       1       2       3       4       5       6
-    (  1,  1)                                      (229,  1)
-```
+  M200 D1.75
+  M200 D0
+  M92 X80.38 Y80.32 Z402.85 E100.20
+  M203 X500.00 Y500.00 Z5.00 E25.00
+  M201 X500.00 Y500.00 Z100.00 E5000.00
+  M204 P4000.00 R500.00 T4000.00
+  M205 B20000.00 S0.00 T0.00 X20.00 Y20.00 Z0.30 E5.00
+  M206 X0.00 Y0.00 Z0.00
+  M420 S1 Z10.00
+  G29 W I0 J0 Z0.24649
+  G29 W I1 J0 Z0.18195
+  G29 W I2 J0 Z0.12734
+  G29 W I3 J0 Z0.16209
+  G29 W I0 J1 Z0.09010
+  G29 W I1 J1 Z0.11244
+  G29 W I2 J1 Z0.05287
+  G29 W I3 J1 Z0.18195
+  G29 W I0 J2 Z0.36812
+  G29 W I1 J2 Z0.27131
+  G29 W I2 J2 Z0.23904
+  G29 W I3 J2 Z0.20677
+  G29 W I0 J3 Z0.55429
+  G29 W I1 J3 Z0.42273
+  G29 W I2 J3 Z0.43018
+  G29 W I3 J3 Z0.48727
+  M145 S0 H200 B60 F0
+  M145 S1 H230 B70 F0
+  M301 P19.79 I3.68 D26.57
+  M851 Z-1.65
