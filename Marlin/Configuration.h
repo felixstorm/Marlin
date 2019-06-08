@@ -472,9 +472,9 @@
   //#define DEFAULT_Kd 440
 
   // Creality Ender-3 ESP32_FS
-  #define DEFAULT_Kp 19.79
-  #define DEFAULT_Ki 3.68
-  #define DEFAULT_Kd 26.57
+#define DEFAULT_Kp 23.66
+#define DEFAULT_Ki 2.15
+#define DEFAULT_Kd 64.95
 
 #endif // PIDTEMP
 
@@ -832,7 +832,6 @@
  * The BLTouch probe uses a Hall effect sensor and emulates a servo.
  */
 #define BLTOUCH
-#define SERVO0_PIN 32
 #if ENABLED(BLTOUCH)
   /**
    * Either: Use the defaults (recommended) or: For special purposes, use the following DEFINES
