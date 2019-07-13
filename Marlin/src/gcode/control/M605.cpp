@@ -1,9 +1,9 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
- * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -92,7 +92,7 @@
         case DXC_AUTO_PARK_MODE:
           break;
         case DXC_DUPLICATION_MODE:
-          if (parser.seen('X')) duplicate_extruder_x_offset = MAX(parser.value_linear_units(), X2_MIN_POS - x_home_pos(0));
+          if (parser.seen('X')) duplicate_extruder_x_offset = _MAX(parser.value_linear_units(), X2_MIN_POS - x_home_pos(0));
           if (parser.seen('R')) duplicate_extruder_temp_offset = parser.value_celsius_diff();
           if (active_extruder != 0) tool_change(0);
           break;
@@ -158,11 +158,12 @@
    *             A value of 0 disables duplication.
    */
   void GcodeSuite::M605() {
+    bool ena = false;
     if (parser.seen("EPS")) {
       planner.synchronize();
       if (parser.seenval('P')) duplication_e_mask = parser.value_int();   // Set the mask directly
-      else if (parser.seenval('E')) duplication_e_mask = pow(2, e + 1) - 1;    // Set the mask by E index
-      const bool ena = (2 == parser.intval('S', extruder_duplication_enabled ? 2 : 0));
+      else if (parser.seenval('E')) duplication_e_mask = pow(2, parser.value_int() + 1) - 1; // Set the mask by E index
+      ena = (2 == parser.intval('S', extruder_duplication_enabled ? 2 : 0));
       extruder_duplication_enabled = ena && (duplication_e_mask >= 3);
     }
     SERIAL_ECHO_START();

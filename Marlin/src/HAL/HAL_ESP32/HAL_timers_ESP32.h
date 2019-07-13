@@ -1,9 +1,9 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
- * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,10 +21,6 @@
  */
 #pragma once
 
-// --------------------------------------------------------------------------
-// Includes
-// --------------------------------------------------------------------------
-
 #include <stdint.h>
 #include "driver/timer.h"
 
@@ -33,9 +29,9 @@
 #include "../../inc/MarlinConfig.h"
 #include "../../pins/pins.h"
 
-// --------------------------------------------------------------------------
+// ------------------------
 // Defines
-// --------------------------------------------------------------------------
+// ------------------------
 //
 #define FORCE_INLINE __attribute__((always_inline)) inline
 
@@ -81,9 +77,9 @@ extern "C" void tempTC_Handler(void);
 extern "C" void stepTC_Handler(void);
 
 
-// --------------------------------------------------------------------------
+// ------------------------
 // Types
-// --------------------------------------------------------------------------
+// ------------------------
 
 typedef struct {
   timer_group_t  group;
@@ -92,15 +88,15 @@ typedef struct {
   void           (*fn)(void);
 } tTimerConfig;
 
-// --------------------------------------------------------------------------
+// ------------------------
 // Public Variables
-// --------------------------------------------------------------------------
+// ------------------------
 
 extern const tTimerConfig TimerConfig[];
 
-// --------------------------------------------------------------------------
+// ------------------------
 // Public functions
-// --------------------------------------------------------------------------
+// ------------------------
 
 void HAL_timer_start (const uint8_t timer_num, uint32_t frequency);
 void HAL_timer_set_compare(const uint8_t timer_num, const hal_timer_t count);
