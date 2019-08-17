@@ -854,7 +854,7 @@ void stop() {
  */
 void setup() {
 
-    HAL_init();
+  HAL_init();
 
   #if HAS_DRIVER(L6470)
     L6470.init();         // setup SPI and then init chips
@@ -1005,11 +1005,11 @@ void setup() {
 
   #if HAS_CUTTER
     cutter.init();
-    #endif
+  #endif
 
   #if ENABLED(COOLANT_MIST)
     OUT_WRITE(COOLANT_MIST_PIN, COOLANT_MIST_INVERT);   // Init Mist Coolant OFF
-    #endif
+  #endif
   #if ENABLED(COOLANT_FLOOD)
     OUT_WRITE(COOLANT_FLOOD_PIN, COOLANT_FLOOD_INVERT); // Init Flood Coolant OFF
   #endif
@@ -1171,7 +1171,7 @@ void loop() {
         quickstop_stepper();
         print_job_timer.stop();
         #if DISABLED(SD_ABORT_NO_COOLDOWN)
-        thermalManager.disable_all_heaters();
+          thermalManager.disable_all_heaters();
         #endif
         thermalManager.zero_fan_speeds();
         wait_for_heatup = false;

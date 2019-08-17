@@ -519,7 +519,7 @@
 #elif MB(ESP32)
   #include "esp32/pins_ESP32.h"                 // ESP32                                  env:esp32
 #elif MB(ESP32_FS_ENDER3)
-  #include "esp32/pins_ESP32_FS_ENDER3.h"
+  #include "esp32/pins_ESP32_FS_ENDER3.h"       // ESP32                                  env:esp32
 
 //
 // Adafruit Grand Central M4 (SAMD51 ARM Cortex-M4)
@@ -942,13 +942,13 @@
 
 #if HAS_CHARACTER_LCD || TOUCH_UI_ULTIPANEL
   #ifndef LCD_PINS_D5
-  #define LCD_PINS_D5 -1
+    #define LCD_PINS_D5 -1
   #endif
   #ifndef LCD_PINS_D6
-  #define LCD_PINS_D6 -1
+    #define LCD_PINS_D6 -1
   #endif
   #ifndef LCD_PINS_D7
-  #define LCD_PINS_D7 -1
+    #define LCD_PINS_D7 -1
   #endif
 #else
   #undef LCD_PINS_D5
