@@ -83,6 +83,7 @@
  * M8   - Turn flood coolant ON. (Requires COOLANT_CONTROL)
  * M9   - Turn coolant OFF. (Requires COOLANT_CONTROL)
  * M12  - Set up closed loop control system. (Requires EXTERNAL_CLOSED_LOOP_CONTROLLER)
+ * M16  - Expected printer check. (Requires EXPECTED_PRINTER_CHECK)
  * M17  - Enable/Power all stepper motors
  * M18  - Disable all stepper motors; same as M84
  * M20  - List SD card. (Requires SDSUPPORT)
@@ -274,7 +275,6 @@
  * T0-T3 - Select an extruder (tool) by index: "T<n> F<units/min>"
  *
  */
-#pragma once
 
 #include "../inc/MarlinConfig.h"
 #include "parser.h"
@@ -471,6 +471,10 @@ private:
 
   #if ENABLED(EXTERNAL_CLOSED_LOOP_CONTROLLER)
     static void M12();
+  #endif
+
+  #if ENABLED(EXPECTED_PRINTER_CHECK)
+    static void M16();
   #endif
 
   static void M17();
@@ -780,6 +784,10 @@ private:
 
   #if ENABLED(SD_ABORT_ON_ENDSTOP_HIT)
     static void M540();
+  #endif
+
+  #if ENABLED(BAUD_RATE_GCODE)
+    static void M575();
   #endif
 
   #if ENABLED(ADVANCED_PAUSE_FEATURE)

@@ -107,7 +107,6 @@ const XrefInfo pin_xref[] PROGMEM = {
 #define NUMBER_PINS_TOTAL NUM_DIGITAL_PINS
 #define VALID_PIN(ANUM) ((ANUM) >= 0 && (ANUM) < NUMBER_PINS_TOTAL)
 #define digitalRead_mod(Ard_num) extDigitalRead(Ard_num)  // must use Arduino pin numbers when doing reads
-#define NAME_FORMAT(p) PSTR("%-##p##s")
 #define PRINT_PIN(Q)
 #define PRINT_PORT(ANUM) port_print(ANUM)
 #define DIGITAL_PIN_TO_ANALOG_PIN(ANUM) -1  // will report analog pin number in the print port routine
@@ -190,7 +189,7 @@ void port_print(const pin_t Ard_num) {
   for (Index = 0; Index < NUMBER_PINS_TOTAL; Index++)
     if (Ard_num == GET_PIN_MAP_PIN_M43(Index)) break;
 
-  char * const ppa = pin_xref[Index].Port_pin_alpha;
+  const char * ppa = pin_xref[Index].Port_pin_alpha;
   sprintf_P(buffer, PSTR("%s"), ppa);
   SERIAL_ECHO(buffer);
   if (ppa[3] == '\0') SERIAL_CHAR(' ');

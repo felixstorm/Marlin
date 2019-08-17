@@ -27,14 +27,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *******************************************************************************
  */
-
-#ifndef _VARIANT_ARDUINO_STM32_
-#define _VARIANT_ARDUINO_STM32_
+#pragma once
 
 /*----------------------------------------------------------------------------
  *        Headers
  *----------------------------------------------------------------------------*/
-#include "PeripheralPins.h"
+#include <PeripheralPins.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -112,7 +110,7 @@ extern const PinName digitalPin[];
   #define PD2   43 //1:UART5_RX / SDIO_CMD
   #define PB3   44 //0:JTDO  1:SPI3_SCK / TIM2_CH2 / SPI1_SCK
   #define PB4   45 //0:NJTRST  1:SPI3_MISO / TIM3_CH1 / SPI1_MISO
-  #define PB5   45 //1:TIM3_CH2 / SPI1_MOSI / SPI3_MOSI
+  #define PB5   46 //1:TIM3_CH2 / SPI1_MOSI / SPI3_MOSI
   #define PB6   47 //1:I2C1_SCL / TIM4_CH1 / USART1_TX
   #define PB7   48 //1:I2C1_SDA / TIM4_CH2 / USART1_RX
   #define PB8   49 //1:I2C1_SCL / TIM4_CH3 / SDIO_D4 / TIM10_CH1
@@ -135,7 +133,7 @@ extern const PinName digitalPin[];
   #define PE15  64 //1:FSMC_D12
   #define PD8   65 //1:FSMC_D13 / USART3_TX
   #define PD9   66 //1:FSMC_D14 / USART3_RX
-  #define PD10  67 //1:FSMC_D15 
+  #define PD10  67 //1:FSMC_D15
   #define PD11  68 //1:FSMC_A16
   #define PD12  69 //1:FSMC_A17 / TIM4_CH1
   #define PD13  70 //1:FSMC_A18 / TIM4_CH2
@@ -292,5 +290,3 @@ extern const PinName digitalPin[];
 #define SERIAL_PORT_MONITOR     Serial
 #define SERIAL_PORT_HARDWARE    Serial1
 #endif
-
-#endif /* _VARIANT_ARDUINO_STM32_ */

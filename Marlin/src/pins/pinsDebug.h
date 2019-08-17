@@ -117,7 +117,7 @@ inline void report_pin_state_extended(pin_t pin, bool ignore, bool extended = fa
     if (GET_ARRAY_PIN(x) == pin) {
       if (found) multi_name_pin = true;
       found = true;
-      if (!multi_name_pin) {    // report digitial and analog pin number only on the first time through
+      if (!multi_name_pin) {    // report digital and analog pin number only on the first time through
         sprintf_P(buffer, PSTR("%sPIN: "), start_string);     // digital pin number
         SERIAL_ECHO(buffer);
         PRINT_PIN(pin);
@@ -159,7 +159,7 @@ inline void report_pin_state_extended(pin_t pin, bool ignore, bool extended = fa
               if (!GET_PINMODE(pin)) {
                 //pinMode(pin, INPUT_PULLUP);  // make sure input isn't floating - stopped doing this
                                                // because this could interfere with inductive/capacitive
-                                               // sensors (high impedance voltage divider) and with PT100 amplifier
+                                               // sensors (high impedance voltage divider) and with Pt100 amplifier
                 print_input_or_output(false);
                 SERIAL_ECHO(digitalRead_mod(pin));
               }

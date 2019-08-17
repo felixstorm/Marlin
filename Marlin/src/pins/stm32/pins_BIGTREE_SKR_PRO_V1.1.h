@@ -23,15 +23,15 @@
 
 #ifndef TARGET_STM32F4
   #error "Oops! Select an STM32F4 board in 'Tools > Board.'"
-#endif
-
-#if HOTENDS > 3 || E_STEPPERS > 3
+#elif HOTENDS > 3 || E_STEPPERS > 3
   #error "BIGTREE SKR Pro V1.1 supports up to 3 hotends / E-steppers."
 #endif
 
 #define BOARD_NAME "BIGTREE SKR Pro 1.1"
 
-#define SRAM_EEPROM_EMULATION
+// Use one of these or SDCard-based Emulation will be used
+//#define SRAM_EEPROM_EMULATION   // Use BackSRAM-based EEPROM emulation
+//#define FLASH_EEPROM_EMULATION  // Use Flash-based EEPROM emulation
 
 //
 // Servos
@@ -105,13 +105,13 @@
 //
 #if ENABLED(TMC_USE_SW_SPI)
   #ifndef TMC_SW_MOSI
-    #define TMC_SW_MOSI      PC12
+    #define TMC_SW_MOSI    PC12
   #endif
   #ifndef TMC_SW_MISO
-    #define TMC_SW_MISO      PC11
+    #define TMC_SW_MISO    PC11
   #endif
   #ifndef TMC_SW_SCK
-    #define TMC_SW_SCK       PC10
+    #define TMC_SW_SCK     PC10
   #endif
 #endif
 

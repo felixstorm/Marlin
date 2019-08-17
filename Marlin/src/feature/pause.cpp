@@ -54,7 +54,11 @@
 #endif
 
 #include "../lcd/ultralcd.h"
-#include "../libs/buzzer.h"
+
+#if HAS_BUZZER
+  #include "../libs/buzzer.h"
+#endif
+
 #include "../libs/nozzle.h"
 #include "pause.h"
 
@@ -349,8 +353,8 @@ bool unload_filament(const float &unload_length, const bool show_lcd/*=false*/,
     planner.settings.retract_acceleration = saved_acceleration;
   #endif
 
-  // Disable extruders steppers for manual filament changing (only on boards that have separate ENABLE_PINS)
-  #if (E0_ENABLE_PIN != X_ENABLE_PIN && E1_ENABLE_PIN != Y_ENABLE_PIN) || AXIS_DRIVER_TYPE_E0(TMC2660) || AXIS_DRIVER_TYPE_E1(TMC2660) || AXIS_DRIVER_TYPE_E2(TMC2660) || AXIS_DRIVER_TYPE_E3(TMC2660) || AXIS_DRIVER_TYPE_E4(TMC2660) || AXIS_DRIVER_TYPE_E5(TMC2660)
+  // Disable E steppers for manual change
+  #if HAS_E_STEPPER_ENABLE
     disable_e_stepper(active_extruder);
     safe_delay(100);
   #endif
@@ -436,7 +440,7 @@ bool pause_print(const float &retract, const point_t &park_point, const float &u
 
   // Park the nozzle by moving up by z_lift and then moving to (x_pos, y_pos)
   if (!axis_unhomed_error())
-    Nozzle::park(2, park_point);
+    nozzle.park(2, park_point);
 
   #if ENABLED(DUAL_X_CARRIAGE)
     const int8_t saved_ext        = active_extruder;

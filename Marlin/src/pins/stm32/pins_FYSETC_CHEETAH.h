@@ -33,6 +33,14 @@
 // Ignore temp readings during development.
 //#define BOGUS_TEMPERATURE_GRACE_PERIOD 2000
 
+#define DISABLE_JTAG
+
+#define FLASH_EEPROM_EMULATION
+#define EEPROM_PAGE_SIZE     uint16(0x800) // 2KB
+#define EEPROM_START_ADDRESS uint32(0x8000000 + 256 * 1024 - 2 * EEPROM_PAGE_SIZE)
+#undef E2END
+#define E2END                (EEPROM_PAGE_SIZE - 1) // 2KB
+
 //
 // Servos
 //
@@ -69,7 +77,7 @@
 #define E0_DIR_PIN         PC14
 #define E0_ENABLE_PIN      PC13
 
-#define X_HARDWARE_SERIAL  MSerial2   // Port correct?
+#define X_HARDWARE_SERIAL  MSerial2
 #define Y_HARDWARE_SERIAL  MSerial2
 #define Z_HARDWARE_SERIAL  MSerial2
 #define E0_HARDWARE_SERIAL MSerial2

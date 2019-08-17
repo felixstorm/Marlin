@@ -26,7 +26,7 @@
  */
 
 #ifndef __AVR_ATmega2560__
-  #error "Oops!  Make sure you have 'Arduino Mega' selected from the 'Tools -> Boards' menu."
+  #error "Oops! Select 'Arduino/Genuino Mega or Mega 2560' in 'Tools > Board.'"
 #endif
 
 #define BOARD_NAME           "Wanhao i3 Mini 0ne+"
@@ -83,7 +83,6 @@
 // SD Card
 //
 #define SD_DETECT_PIN      -1
-#define SDPOWER            -1
 #define SDSS               53
 
 //
