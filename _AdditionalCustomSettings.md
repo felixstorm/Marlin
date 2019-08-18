@@ -8,12 +8,19 @@ M502
 M92 E100.2
 M92 X80.38 Y80.32 Z402.85
 
-; Z-Probe Offset (mm)
+; Z-Probe Offset (Buildtak etc.)
 M851 Z-1.65
-; für halbwegs ebenes Glas-Druckbett
-M851 Z-1.45
+; Z-Probe Offset (Glas-Druckbett)
+M851 Z-1.35
 ; Bed-Leveling Fade Height (mm)
 M420 Z10.00
+
+; Preheat Settings (Buildtak etc.)
+M145 S0 H200 B60 F0
+M145 S1 H230 B70 F0
+; Preheat Settings (Glas-Druckbett)
+M145 S0 H200 B65 F0
+M145 S1 H230 B75 F0
 
 ; Save Settings
 M500
@@ -27,14 +34,18 @@ Slicer Settings
   * *Initial* Layer Horizontal Expansion: `-0.1` mm (compensate for "elephant's foot")
   * Flow (%): `90` (after calibration with PLA - seems to be the opposite of the adjustment of extruder steps?!)
 * PETG
-  * **Blue Tape!** - PETG geht von Buildtak nur ganz schwer ab und es bleiben Spuren / Beschädigungen auf dem Buildtak zurück!
-    * nur bei kleinen Teilen bzw. sehr wenig Auflagefläche mit Buildtak (und möglichst auch nicht direkt in der Mitte), da Brim aus PETG schwer vom Object zu entfernen ist (es bricht nicht einfach ab wie bei PLA, sondern hängt sehr fest dran)
+  * Glas-Druckbett geht eigentlich sehr gut (wichtig: **vorher mit Alkohol reinigen**), alternativ:
+    * Blue Tape
+    * Buildtak: PETG geht davon nur ganz schwer ab und es bleiben schnell Spuren / Beschädigungen auf dem Buildtak zurück!  
+      Daher: Buildtak nur bei kleinen Teilen bzw. sehr wenig Auflagefläche (und möglichst auch nicht direkt in der Mitte).
+    * Brim aus PETG ist relativ schwer vom Object zu entfernen (es bricht nicht einfach ab wie bei PLA, sondern hängt sehr fest dran und muss meistens mit einem Cutter abgeschnitten werden).
   * **Line Width: `0.5` mm**
     * Wall Thickness: `1` mm
   * *Initial* Layer Horizontal Expansion: `-0.2` mm (aber Vorsicht bei sehr kleinen Teilen - die haften dann mangels unterstem Layer schlecht oder gar nicht mehr)
-  * Default Printing Temperature: `230` °C
-  * **Flow: `100` %** (TBD: prüfen, ob nicht grundsätzlich mit 110% und nur bei sehr maßhaltigen Teilen 100%)
-    * Initial Layer Flow: `90` % (sofern die Haftung gut ist, denn bei 100% matscht es schon ganz ordentlich)
+  * Printing Temperature: `230` °C
+  * Build Plate Temperature: `75` °C (Glas-Druckbett)
+  * **Flow: `105` %**
+    * Initial Layer Flow: `100` % (bei Glas-Druckbett und Z-Probe Offset -1.40)
   * Print Speed: `60` mm/s (sollte Default sein), für noch bessere Qualität ggfs. auf `45` oder `30` mm/s reduzieren (macht zeitlich nicht viel aus)
     * Initial Layer Speed: `15` mm/s (hält besser)
   * Combing Mode: `Within Infill` (sonst bildet sich teilweise Stringing, wenn der Extruder z.B. vom Infill über Eck zum Start der Inner Wall fährt und sich dabei dann ein Faden quer rüber spannt)
@@ -42,8 +53,9 @@ Slicer Settings
     * X/Y Distance: `1` mm
     * Z Distance: `0.2` mm
   * Wenn es Probleme gibt (z. B. wenn die Fäden nicht aneinander haften und/oder es sehr hässliches Stringing gibt):
-    * **Flow hoch (bei z.B. 110% sieht es normalerweise super aus)** und notfalls auch 
-    * **Print Speed runter (z.B. auf 15 mm/s)**
+    * **Flow weiter hoch (z.B. auf 110% oder 115%)**
+    * evtl. Fan Speed runter auf `50` % oder ganz aus (`0` %) (weniger Detail, aber bessere Layer-Haftung)
+    * notfalls auch **Print Speed runter (z.B. auf 15 mm/s)**
 
 Slicer Machine Settings
 ====================
