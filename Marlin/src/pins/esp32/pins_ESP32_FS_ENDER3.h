@@ -52,13 +52,13 @@
 #define X_DIR_PIN          135
 #define X_ENABLE_PIN       138
 
-#define Y_STEP_PIN         133
-#define Y_DIR_PIN          132
-#define Y_ENABLE_PIN       134
+#define Y_STEP_PIN         130
+#define Y_DIR_PIN          129
+#define Y_ENABLE_PIN       131
 
-#define Z_STEP_PIN         130
-#define Z_DIR_PIN          129
-#define Z_ENABLE_PIN       131
+#define Z_STEP_PIN         133
+#define Z_DIR_PIN          132
+#define Z_ENABLE_PIN       134
 
 #define E0_STEP_PIN        140
 #define E0_DIR_PIN         141
