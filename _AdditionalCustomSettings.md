@@ -10,6 +10,8 @@ M92 X80.38 Y80.32 Z402.85
 
 ; Z-Probe Offset (mm)
 M851 Z-1.65
+; für halbwegs ebenes Glas-Druckbett
+M851 Z-1.45
 ; Bed-Leveling Fade Height (mm)
 M420 Z10.00
 
@@ -31,15 +33,17 @@ Slicer Settings
     * Wall Thickness: `1` mm
   * *Initial* Layer Horizontal Expansion: `-0.2` mm (aber Vorsicht bei sehr kleinen Teilen - die haften dann mangels unterstem Layer schlecht oder gar nicht mehr)
   * Default Printing Temperature: `230` °C
-  * **Flow: `100` %**
-    * Initial Layer Flow: `90` % (damit es nicht so matscht)
+  * **Flow: `100` %** (TBD: prüfen, ob nicht grundsätzlich mit 110% und nur bei sehr maßhaltigen Teilen 100%)
+    * Initial Layer Flow: `90` % (sofern die Haftung gut ist, denn bei 100% matscht es schon ganz ordentlich)
   * Print Speed: `60` mm/s (sollte Default sein), für noch bessere Qualität ggfs. auf `45` oder `30` mm/s reduzieren (macht zeitlich nicht viel aus)
     * Initial Layer Speed: `15` mm/s (hält besser)
   * Combing Mode: `Within Infill` (sonst bildet sich teilweise Stringing, wenn der Extruder z.B. vom Infill über Eck zum Start der Inner Wall fährt und sich dabei dann ein Faden quer rüber spannt)
   * Support (geht sonst so schlecht ab)
     * X/Y Distance: `1` mm
     * Z Distance: `0.2` mm
-  * Wenn es Probleme gibt (z. B. wenn die Fäden nicht aneinander haften und es sehr hässliches Stringing gibt): **Print Speed runter (z.B. auf 15 mm/s) und Flow hoch (z.B. auf 110%)**
+  * Wenn es Probleme gibt (z. B. wenn die Fäden nicht aneinander haften und/oder es sehr hässliches Stringing gibt):
+    * **Flow hoch (bei z.B. 110% sieht es normalerweise super aus)** und notfalls auch 
+    * **Print Speed runter (z.B. auf 15 mm/s)**
 
 Slicer Machine Settings
 ====================
