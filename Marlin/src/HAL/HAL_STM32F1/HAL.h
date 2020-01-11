@@ -33,30 +33,44 @@
 #include "../shared/math_32bit.h"
 #include "../shared/HAL_SPI.h"
 
-#include "fastio_STM32F1.h"
-#include "watchdog_STM32F1.h"
+#include "fastio.h"
+#include "watchdog.h"
 
-#include "HAL_timers_STM32F1.h"
+#include "timers.h"
 
 #include <stdint.h>
 #include <util/atomic.h>
 
 #include "../../inc/MarlinConfigPre.h"
 
+#ifdef USE_USB_COMPOSITE
+  #include "msc_sd.h"
+#endif
+
 // ------------------------
 // Defines
 // ------------------------
 
+#ifndef STM32_FLASH_SIZE
+  #ifdef MCU_STM32F103RE
+    #define STM32_FLASH_SIZE 512
+  #else
+    #define STM32_FLASH_SIZE 256
+  #endif
+#endif
+
 #ifdef SERIAL_USB
-  #define UsbSerial Serial
+  #ifndef USE_USB_COMPOSITE
+    #define UsbSerial Serial
+  #else
+    #define UsbSerial MarlinCompositeSerial
+  #endif
   #define MSerial1  Serial1
   #define MSerial2  Serial2
   #define MSerial3  Serial3
   #define MSerial4  Serial4
   #define MSerial5  Serial5
 #else
-  extern USBSerial SerialUSB;
-  #define UsbSerial SerialUSB
   #define MSerial1  Serial
   #define MSerial2  Serial1
   #define MSerial3  Serial2
@@ -64,13 +78,10 @@
   #define MSerial5  Serial4
 #endif
 
-#if !WITHIN(SERIAL_PORT, -1, 5)
-  #error "SERIAL_PORT must be from -1 to 5"
-#endif
-#if SERIAL_PORT == -1
+#if SERIAL_PORT == 0
+  #error "SERIAL_PORT cannot be 0. (Port 0 does not exist.) Please update your configuration."
+#elif SERIAL_PORT == -1
   #define MYSERIAL0 UsbSerial
-#elif SERIAL_PORT == 0
-  #error "Serial port 0 does not exist"
 #elif SERIAL_PORT == 1
   #define MYSERIAL0 MSerial1
 #elif SERIAL_PORT == 2
@@ -81,19 +92,17 @@
   #define MYSERIAL0 MSerial4
 #elif SERIAL_PORT == 5
   #define MYSERIAL0 MSerial5
+#else
+  #error "SERIAL_PORT must be from -1 to 5. Please update your configuration."
 #endif
 
 #ifdef SERIAL_PORT_2
-  #if !WITHIN(SERIAL_PORT_2, -1, 5)
-    #error "SERIAL_PORT_2 must be from -1 to 5"
+  #if SERIAL_PORT_2 == 0
+    #error "SERIAL_PORT_2 cannot be 0. (Port 0 does not exist.) Please update your configuration."
   #elif SERIAL_PORT_2 == SERIAL_PORT
-    #error "SERIAL_PORT_2 must be different than SERIAL_PORT"
-  #endif
-  #define NUM_SERIAL 2
-  #if SERIAL_PORT_2 == -1
+    #error "SERIAL_PORT_2 must be different than SERIAL_PORT. Please update your configuration."
+  #elif SERIAL_PORT_2 == -1
     #define MYSERIAL1 UsbSerial
-  #elif SERIAL_PORT_2 == 0
-  #error "Serial port 0 does not exist"
   #elif SERIAL_PORT_2 == 1
     #define MYSERIAL1 MSerial1
   #elif SERIAL_PORT_2 == 2
@@ -104,13 +113,43 @@
     #define MYSERIAL1 MSerial4
   #elif SERIAL_PORT_2 == 5
     #define MYSERIAL1 MSerial5
+  #else
+    #error "SERIAL_PORT_2 must be from -1 to 5. Please update your configuration."
   #endif
+  #define NUM_SERIAL 2
 #else
   #define NUM_SERIAL 1
 #endif
 
+#ifdef DGUS_SERIAL
+  #if DGUS_SERIAL_PORT == 0
+    #error "DGUS_SERIAL_PORT cannot be 0. (Port 0 does not exist.) Please update your configuration."
+  #elif DGUS_SERIAL_PORT == SERIAL_PORT
+    #error "DGUS_SERIAL_PORT must be different than SERIAL_PORT. Please update your configuration."
+  #elif defined(SERIAL_PORT_2) && DGUS_SERIAL_PORT == SERIAL_PORT_2
+    #error "DGUS_SERIAL_PORT must be different than SERIAL_PORT_2. Please update your configuration."
+  #elif DGUS_SERIAL_PORT == -1
+    #define DGUS_SERIAL UsbSerial
+  #elif DGUS_SERIAL_PORT == 1
+    #define DGUS_SERIAL MSerial1
+  #elif DGUS_SERIAL_PORT == 2
+    #define DGUS_SERIAL MSerial2
+  #elif DGUS_SERIAL_PORT == 3
+    #define DGUS_SERIAL MSerial3
+  #elif DGUS_SERIAL_PORT == 4
+    #define DGUS_SERIAL MSerial4
+  #elif DGUS_SERIAL_PORT == 5
+    #define DGUS_SERIAL MSerial5
+  #else
+    #error "DGUS_SERIAL_PORT must be from -1 to 5. Please update your configuration."
+  #endif
+#endif
+
+
 // Set interrupt grouping for this MCU
-void HAL_init(void);
+void HAL_init();
+#define HAL_IDLETASK 1
+void HAL_idletask();
 
 /**
  * TODO: review this to return 1 for pins that are not analog input
@@ -175,10 +214,10 @@ extern uint16_t HAL_adc_result;
 #define __bss_end __bss_end__
 
 // Clear reset reason
-void HAL_clear_reset_source(void);
+void HAL_clear_reset_source();
 
 // Reset reason
-uint8_t HAL_get_reset_source(void);
+uint8_t HAL_get_reset_source();
 
 void _delay_ms(const int delay);
 
@@ -187,7 +226,7 @@ void _delay_ms(const int delay);
 
 /*
 extern "C" {
-  int freeMemory(void);
+  int freeMemory();
 }
 */
 
@@ -209,17 +248,6 @@ static int freeMemory() {
 #pragma GCC diagnostic pop
 
 //
-// SPI: Extended functions which take a channel number (hardware SPI only)
-//
-
-// Write single byte to specified SPI channel
-void spiSend(uint32_t chan, byte b);
-// Write buffer to specified SPI channel
-void spiSend(uint32_t chan, const uint8_t* buf, size_t n);
-// Read single byte from specified SPI channel
-uint8_t spiRec(uint32_t chan);
-
-//
 // EEPROM
 //
 
@@ -238,14 +266,15 @@ void eeprom_update_block(const void *__src, void *__dst, size_t __n);
 
 #define HAL_ANALOG_SELECT(pin) pinMode(pin, INPUT_ANALOG);
 
-void HAL_adc_init(void);
+void HAL_adc_init();
 
 #define HAL_START_ADC(pin)  HAL_adc_start_conversion(pin)
+#define HAL_ADC_RESOLUTION  10
 #define HAL_READ_ADC()      HAL_adc_result
 #define HAL_ADC_READY()     true
 
 void HAL_adc_start_conversion(const uint8_t adc_pin);
-uint16_t HAL_adc_get_result(void);
+uint16_t HAL_adc_get_result();
 
 uint16_t analogRead(pin_t pin); // need HAL_ANALOG_SELECT() first
 void analogWrite(pin_t pin, int pwm_val8); // PWM only! mul by 257 in maple!?
@@ -256,3 +285,6 @@ void analogWrite(pin_t pin, int pwm_val8); // PWM only! mul by 257 in maple!?
 
 #define JTAG_DISABLE() afio_cfg_debug_ports(AFIO_DEBUG_SW_ONLY)
 #define JTAGSWD_DISABLE() afio_cfg_debug_ports(AFIO_DEBUG_NONE)
+
+#define PLATFORM_M997_SUPPORT
+void flashFirmware(int16_t value);

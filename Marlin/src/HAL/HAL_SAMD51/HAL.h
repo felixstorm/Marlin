@@ -25,19 +25,17 @@
 #include "../shared/Marduino.h"
 #include "../shared/math_32bit.h"
 #include "../shared/HAL_SPI.h"
-#include "fastio_SAMD51.h"
-#include "watchdog_SAMD51.h"
-#include "HAL_timers_SAMD51.h"
+#include "fastio.h"
+#include "watchdog.h"
+#include "timers.h"
 
 #ifdef ADAFRUIT_GRAND_CENTRAL_M4
   #include "MarlinSerial_AGCM4.h"
 
   // Serial ports
-  #if !WITHIN(SERIAL_PORT, -1, 3)
-    #error "SERIAL_PORT must be from -1 to 3"
-  #endif
 
   // MYSERIAL0 required before MarlinSerial includes!
+
   #if SERIAL_PORT == -1
     #define MYSERIAL0 Serial
   #elif SERIAL_PORT == 0
@@ -46,18 +44,16 @@
     #define MYSERIAL0 Serial2
   #elif SERIAL_PORT == 2
     #define MYSERIAL0 Serial3
-  #else
+  #elif SERIAL_PORT == 3
     #define MYSERIAL0 Serial4
+  #else
+    #error "SERIAL_PORT must be from -1 to 3. Please update your configuration."
   #endif
 
   #ifdef SERIAL_PORT_2
-    #if !WITHIN(SERIAL_PORT_2, -1, 3)
-      #error "SERIAL_PORT_2 must be from -1 to 3"
-    #elif SERIAL_PORT_2 == SERIAL_PORT
-      #error "SERIAL_PORT_2 must be different than SERIAL_PORT"
-    #endif
-    #define NUM_SERIAL 2
-    #if SERIAL_PORT_2 == -1
+    #if SERIAL_PORT_2 == SERIAL_PORT
+      #error "SERIAL_PORT_2 must be different than SERIAL_PORT. Please update your configuration."
+    #elif SERIAL_PORT_2 == -1
       #define MYSERIAL1 Serial
     #elif SERIAL_PORT_2 == 0
       #define MYSERIAL1 Serial1
@@ -65,11 +61,34 @@
       #define MYSERIAL1 Serial2
     #elif SERIAL_PORT_2 == 2
       #define MYSERIAL1 Serial3
-    #else
+    #elif SERIAL_PORT_2 == 3
       #define MYSERIAL1 Serial4
+    #else
+      #error "SERIAL_PORT_2 must be from -1 to 3. Please update your configuration."
     #endif
+    #define NUM_SERIAL 2
   #else
     #define NUM_SERIAL 1
+  #endif
+
+  #ifdef DGUS_SERIAL_PORT
+    #if DGUS_SERIAL_PORT == SERIAL_PORT
+      #error "DGUS_SERIAL_PORT must be different than SERIAL_PORT. Please update your configuration."
+    #elif defined(SERIAL_PORT_2) && DGUS_SERIAL_PORT == SERIAL_PORT_2
+      #error "DGUS_SERIAL_PORT must be different than SERIAL_PORT_2. Please update your configuration."
+    #elif DGUS_SERIAL_PORT == -1
+      #define DGUS_SERIAL Serial
+    #elif DGUS_SERIAL_PORT == 0
+      #define DGUS_SERIAL Serial1
+    #elif DGUS_SERIAL_PORT == 1
+      #define DGUS_SERIAL Serial2
+    #elif DGUS_SERIAL_PORT == 2
+      #define DGUS_SERIAL Serial3
+    #elif DGUS_SERIAL_PORT == 2
+      #define DGUS_SERIAL Serial4
+    #else
+      #error "DGUS_SERIAL_PORT must be from -1 to 3. Please update your configuration."
+    #endif
   #endif
 
 #endif // ADAFRUIT_GRAND_CENTRAL_M4
@@ -91,8 +110,8 @@ typedef int8_t pin_t;
 #define cli() __disable_irq()       // Disable interrupts
 #define sei() __enable_irq()        // Enable interrupts
 
-void HAL_clear_reset_source(void);  // clear reset reason
-uint8_t HAL_get_reset_source(void); // get reset reason
+void HAL_clear_reset_source();  // clear reset reason
+uint8_t HAL_get_reset_source(); // get reset reason
 
 //
 // EEPROM
@@ -107,14 +126,16 @@ extern uint16_t HAL_adc_result;     // result of last ADC conversion
 
 #define HAL_ANALOG_SELECT(pin)
 
-void HAL_adc_init(void);
+void HAL_adc_init();
 
+#define HAL_ADC_FILTERED            // Disable oversampling done in Marlin as ADC values already filtered in HAL
+#define HAL_ADC_RESOLUTION  12
 #define HAL_START_ADC(pin)  HAL_adc_start_conversion(pin)
 #define HAL_READ_ADC()      HAL_adc_result
 #define HAL_ADC_READY()     true
 
 void HAL_adc_start_conversion(const uint8_t adc_pin);
-uint16_t HAL_adc_get_result(void);
+uint16_t HAL_adc_get_result();
 
 //
 // Pin Map
@@ -131,10 +152,10 @@ void tone(const pin_t _pin, const unsigned int frequency, const unsigned long du
 void noTone(const pin_t _pin);
 
 // Enable hooks into idle and setup for HAL
-void HAL_init(void);
+void HAL_init();
 /*
 #define HAL_IDLETASK 1
-void HAL_idletask(void);
+void HAL_idletask();
 */
 
 //
@@ -144,5 +165,13 @@ FORCE_INLINE void _delay_ms(const int delay_ms) { delay(delay_ms); }
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-function"
-int freeMemory(void);
+int freeMemory();
 #pragma GCC diagnostic pop
+
+#ifdef __cplusplus
+  extern "C" {
+#endif
+char *dtostrf(double __val, signed char __width, unsigned char __prec, char *__s);
+#ifdef __cplusplus
+  }
+#endif

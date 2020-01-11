@@ -25,12 +25,12 @@
  * Selena Compact pin assignments
  */
 
-#ifndef TARGET_LPC1768
+#ifndef MCU_LPC1768
   #error "Oops! Make sure you have the LPC1768 environment selected in your IDE."
 #endif
 
-#define BOARD_NAME        "Selena Compact"
-#define BOARD_WEBSITE_URL "https://github.com/Ales2-k/Selena"
+#define BOARD_INFO_NAME   "Selena Compact"
+#define BOARD_WEBSITE_URL "github.com/Ales2-k/Selena"
 
 //
 // Servos
@@ -75,9 +75,9 @@
 // Temperature Sensors
 // 3.3V max when defined as an analog input
 //
-#define TEMP_BED_PIN        0   // A0 (TH1)
-#define TEMP_0_PIN          1   // A1 (TH2)
-#define TEMP_1_PIN          2   // A2 (TH3)
+#define TEMP_BED_PIN        P0_23_A0   // A0 (TH1)
+#define TEMP_0_PIN          P0_24_A1   // A1 (TH2)
+#define TEMP_1_PIN          P0_25_A2   // A2 (TH3)
 
 
 //

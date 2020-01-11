@@ -25,10 +25,10 @@
  */
 
 #ifndef ARDUINO_ARCH_ESP32
-  "Oops! Select an ESP32 board in 'Tools > Board.'"
+  #error "Oops! Select an ESP32 board in 'Tools > Board.'"
 #endif
 
-#define BOARD_NAME "ESP32 FS Ender 3 r3"
+#define BOARD_INFO_NAME "ESP32 FS Ender 3 r3"
 
 //
 // I2S (steppers & other output-only pins)

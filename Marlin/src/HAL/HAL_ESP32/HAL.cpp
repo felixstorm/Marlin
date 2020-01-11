@@ -23,16 +23,12 @@
 #ifdef ARDUINO_ARCH_ESP32
 
 #include "HAL.h"
-#include "HAL_timers_ESP32.h"
+#include "timers.h"
 #include <rom/rtc.h>
 #include <driver/adc.h>
 #include <esp_adc_cal.h>
 
 #include "../../inc/MarlinConfigPre.h"
-
-#if EITHER(EEPROM_SETTINGS, WEBSUPPORT)
-  #include "spiffs.h"
-#endif
 
 #if ENABLED(WIFISUPPORT)
   #include <ESPAsyncWebServer.h>
@@ -41,6 +37,7 @@
     #include "ota.h"
   #endif
   #if ENABLED(WEBSUPPORT)
+    #include "spiffs.h"
     #include "web.h"
   #endif
 #endif
@@ -78,36 +75,47 @@ volatile int numPWMUsed = 0,
 // Public functions
 // ------------------------
 
-void HAL_init(void) {
-  i2s_init();
-}
+#if ENABLED(WIFI_CUSTOM_COMMAND)
 
-void HAL_init_board(void) {
-  #if EITHER(EEPROM_SETTINGS, WEBSUPPORT)
-    spiffs_init();
-  #endif
+  bool wifi_custom_command(char * const command_ptr) {
+    #if ENABLED(ESP3D_WIFISUPPORT)
+      return esp3dlib.parse(command_ptr);
+    #else
+      UNUSED(command_ptr);
+      return false;
+    #endif
+  }
 
-  #if ENABLED(WIFISUPPORT)
+#endif
+
+void HAL_init() { i2s_init(); }
+
+void HAL_init_board() {
+
+  #if ENABLED(ESP3D_WIFISUPPORT)
+    esp3dlib.init();
+  #elif ENABLED(WIFISUPPORT)
     wifi_init();
     #if ENABLED(OTASUPPORT)
       OTA_init();
     #endif
     #if ENABLED(WEBSUPPORT)
+      spiffs_init();
       web_init();
     #endif
     server.begin();
   #endif
 }
 
-void HAL_idletask(void) {
-  #if ENABLED(OTASUPPORT)
+void HAL_idletask() {
+  #if BOTH(WIFISUPPORT, OTASUPPORT)
     OTA_handle();
   #endif
 }
 
-void HAL_clear_reset_source(void) { }
+void HAL_clear_reset_source() { }
 
-uint8_t HAL_get_reset_source(void) { return rtc_get_reset_reason(1); }
+uint8_t HAL_get_reset_source() { return rtc_get_reset_reason(1); }
 
 void _delay_ms(int delay_ms) { delay(delay_ms); }
 
@@ -187,19 +195,21 @@ void HAL_adc_start_conversion(uint8_t adc_pin) {
   const adc1_channel_t chan = get_channel(adc_pin);
   uint32_t mv;
   esp_adc_cal_get_voltage((adc_channel_t)chan, &characteristics[attenuations[chan]], &mv);
+  HAL_adc_result = mv * 1023.0 / 3300.0;
 
   // Change the attenuation level based on the new reading
   adc_atten_t atten;
   if (mv < thresholds[ADC_ATTEN_DB_0] - 100)
-    adc1_set_attenuation(chan, ADC_ATTEN_DB_0);
+    atten = ADC_ATTEN_DB_0;
   else if (mv > thresholds[ADC_ATTEN_DB_0] - 50 && mv < thresholds[ADC_ATTEN_DB_2_5] - 100)
-    adc1_set_attenuation(chan, ADC_ATTEN_DB_2_5);
+    atten = ADC_ATTEN_DB_2_5;
   else if (mv > thresholds[ADC_ATTEN_DB_2_5] - 50 && mv < thresholds[ADC_ATTEN_DB_6] - 100)
-    adc1_set_attenuation(chan, ADC_ATTEN_DB_6);
+    atten = ADC_ATTEN_DB_6;
   else if (mv > thresholds[ADC_ATTEN_DB_6] - 50)
-    adc1_set_attenuation(chan, ADC_ATTEN_DB_11);
+    atten = ADC_ATTEN_DB_11;
+  else return;
 
-  HAL_adc_result = mv * 1023.0 / 3300.0;
+  adc1_set_attenuation(chan, atten);
 }
 
 void analogWrite(pin_t pin, int value) {

@@ -46,10 +46,10 @@
 void GcodeSuite::M425() {
   bool noArgs = true;
 
-  LOOP_XYZ(i) {
-    if (parser.seen(axis_codes[i])) {
+  LOOP_XYZ(a) {
+    if (parser.seen(axis_codes[a])) {
       planner.synchronize();
-      backlash.distance_mm[i] = parser.has_value() ? parser.value_linear_units() : backlash.get_measurement(i);
+      backlash.distance_mm[a] = parser.has_value() ? parser.value_linear_units() : backlash.get_measurement(AxisEnum(a));
       noArgs = false;
     }
   }
@@ -75,8 +75,7 @@ void GcodeSuite::M425() {
     SERIAL_ECHOLNPAIR("  Correction Amount/Fade-out:     F", backlash.get_correction(), " (F1.0 = full, F0.0 = none)");
     SERIAL_ECHOPGM("  Backlash Distance (mm):        ");
     LOOP_XYZ(a) {
-      SERIAL_CHAR(' ');
-      SERIAL_CHAR(axis_codes[a]);
+      SERIAL_CHAR(' ', axis_codes[a]);
       SERIAL_ECHO(backlash.distance_mm[a]);
       SERIAL_EOL();
     }
@@ -88,10 +87,9 @@ void GcodeSuite::M425() {
     #if ENABLED(MEASURE_BACKLASH_WHEN_PROBING)
       SERIAL_ECHOPGM("  Average measured backlash (mm):");
       if (backlash.has_any_measurement()) {
-        LOOP_XYZ(a) if (backlash.has_measurement(a)) {
-          SERIAL_CHAR(' ');
-          SERIAL_CHAR(axis_codes[a]);
-          SERIAL_ECHO(backlash.get_measurement(a));
+        LOOP_XYZ(a) if (backlash.has_measurement(AxisEnum(a))) {
+          SERIAL_CHAR(' ', axis_codes[a]);
+          SERIAL_ECHO(backlash.get_measurement(AxisEnum(a)));
         }
       }
       else

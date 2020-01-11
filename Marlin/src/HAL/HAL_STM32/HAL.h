@@ -28,8 +28,8 @@
 #include "../shared/Marduino.h"
 #include "../shared/math_32bit.h"
 #include "../shared/HAL_SPI.h"
-#include "fastio_STM32.h"
-#include "watchdog_STM32.h"
+#include "fastio.h"
+#include "watchdog.h"
 
 #include "../../inc/MarlinConfigPre.h"
 
@@ -44,13 +44,8 @@
 // ------------------------
 
 #if SERIAL_PORT == 0
-  #error "Serial port 0 does not exist"
-#endif
-
-#if !WITHIN(SERIAL_PORT, -1, 6)
-  #error "SERIAL_PORT must be from -1 to 6"
-#endif
-#if SERIAL_PORT == -1
+  #error "SERIAL_PORT cannot be 0. (Port 0 does not exist.) Please update your configuration."
+#elif SERIAL_PORT == -1
   #define MYSERIAL0 SerialUSB
 #elif SERIAL_PORT == 1
   #define MYSERIAL0 Serial1
@@ -64,20 +59,17 @@
   #define MYSERIAL0 Serial5
 #elif SERIAL_PORT == 6
   #define MYSERIAL0 Serial6
+#else
+  #error "SERIAL_PORT must be from -1 to 6. Please update your configuration."
 #endif
 
 #ifdef SERIAL_PORT_2
-  #if SERIAL_PORT_2 == 0
-    #error "Serial port 0 does not exist"
-  #endif
-
-  #if !WITHIN(SERIAL_PORT_2, -1, 6)
-    #error "SERIAL_PORT_2 must be from -1 to 6"
-  #elif SERIAL_PORT_2 == SERIAL_PORT
-    #error "SERIAL_PORT_2 must be different than SERIAL_PORT"
-  #endif
   #define NUM_SERIAL 2
-  #if SERIAL_PORT_2 == -1
+  #if SERIAL_PORT_2 == 0
+    #error "SERIAL_PORT_2 cannot be 0. (Port 0 does not exist.) Please update your configuration."
+  #elif SERIAL_PORT_2 == SERIAL_PORT
+    #error "SERIAL_PORT_2 must be different than SERIAL_PORT. Please update your configuration."
+  #elif SERIAL_PORT_2 == -1
     #define MYSERIAL1 SerialUSB
   #elif SERIAL_PORT_2 == 1
     #define MYSERIAL1 Serial1
@@ -91,12 +83,42 @@
     #define MYSERIAL1 Serial5
   #elif SERIAL_PORT_2 == 6
     #define MYSERIAL1 Serial6
+  #else
+    #error "SERIAL_PORT_2 must be from -1 to 6. Please update your configuration."
   #endif
 #else
   #define NUM_SERIAL 1
 #endif
 
-#include "HAL_timers_STM32.h"
+#if HAS_DGUS_LCD
+  #if DGUS_SERIAL_PORT == 0
+    #error "DGUS_SERIAL_PORT cannot be 0. (Port 0 does not exist.) Please update your configuration."
+  #elif DGUS_SERIAL_PORT == SERIAL_PORT
+    #error "DGUS_SERIAL_PORT must be different than SERIAL_PORT. Please update your configuration."
+  #elif defined(SERIAL_PORT_2) && DGUS_SERIAL_PORT == SERIAL_PORT_2
+    #error "DGUS_SERIAL_PORT must be different than SERIAL_PORT_2. Please update your configuration."
+  #elif DGUS_SERIAL_PORT == -1
+    #define DGUS_SERIAL SerialUSB
+  #elif DGUS_SERIAL_PORT == 1
+    #define DGUS_SERIAL Serial1
+  #elif DGUS_SERIAL_PORT == 2
+    #define DGUS_SERIAL Serial2
+  #elif DGUS_SERIAL_PORT == 3
+    #define DGUS_SERIAL Serial3
+  #elif DGUS_SERIAL_PORT == 4
+    #define DGUS_SERIAL Serial4
+  #elif DGUS_SERIAL_PORT == 5
+    #define DGUS_SERIAL Serial5
+  #elif DGUS_SERIAL_PORT == 6
+    #define DGUS_SERIAL Serial6
+  #else
+    #error "DGUS_SERIAL_PORT must be from -1 to 6. Please update your configuration."
+  #endif
+
+  #define DGUS_SERIAL_GET_TX_BUFFER_FREE DGUS_SERIAL.availableForWrite
+#endif
+
+#include "timers.h"
 
 /**
  * TODO: review this to return 1 for pins that are not analog input
@@ -147,13 +169,13 @@ extern uint16_t HAL_adc_result;
 #define __bss_end __bss_end__
 
 // Enable hooks into  setup for HAL
-void HAL_init(void);
+void HAL_init();
 
 // Clear reset reason
-void HAL_clear_reset_source (void);
+void HAL_clear_reset_source();
 
 // Reset reason
-uint8_t HAL_get_reset_source(void);
+uint8_t HAL_get_reset_source();
 
 void _delay_ms(const int delay);
 
@@ -168,17 +190,6 @@ static inline int freeMemory() {
 }
 
 #pragma GCC diagnostic pop
-
-//
-// SPI: Extended functions which take a channel number (hardware SPI only)
-//
-
-// Write single byte to specified SPI channel
-void spiSend(uint32_t chan, byte b);
-// Write buffer to specified SPI channel
-void spiSend(uint32_t chan, const uint8_t* buf, size_t n);
-// Read single byte from specified SPI channel
-uint8_t spiRec(uint32_t chan);
 
 //
 // EEPROM
@@ -196,16 +207,20 @@ void eeprom_update_block(const void *__src, void *__dst, size_t __n);
 
 #define HAL_ANALOG_SELECT(pin) pinMode(pin, INPUT)
 
-inline void HAL_adc_init(void) {}
+inline void HAL_adc_init() {}
 
 #define HAL_START_ADC(pin)  HAL_adc_start_conversion(pin)
+#define HAL_ADC_RESOLUTION  10
 #define HAL_READ_ADC()      HAL_adc_result
 #define HAL_ADC_READY()     true
 
 void HAL_adc_start_conversion(const uint8_t adc_pin);
 
-uint16_t HAL_adc_get_result(void);
+uint16_t HAL_adc_get_result();
 
 #define GET_PIN_MAP_PIN(index) index
 #define GET_PIN_MAP_INDEX(pin) pin
 #define PARSED_PIN_INDEX(code, dval) parser.intval(code, dval)
+
+#define PLATFORM_M997_SUPPORT
+void flashFirmware(int16_t value);
