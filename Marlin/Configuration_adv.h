@@ -245,7 +245,7 @@
       #define PID_FAN_SCALING_LIN_FACTOR (0)             // Power loss due to cooling = Kf * (fan_speed)
       #define DEFAULT_Kf 10                              // A constant value added to the PID-tuner
       #define PID_FAN_SCALING_MIN_SPEED 10               // Minimum fan speed at which to enable PID_FAN_SCALING
-#endif
+    #endif
   #endif
 #endif
 
@@ -792,8 +792,8 @@
   //#define CALIBRATION_REPORTING
 
   // The true location and dimension the cube/bolt/washer on the bed.
-  #define CALIBRATION_OBJECT_CENTER     { 264.0, -22.0,  -2.0} // mm
-  #define CALIBRATION_OBJECT_DIMENSIONS {  10.0,  10.0,  10.0} // mm
+  #define CALIBRATION_OBJECT_CENTER     { 264.0, -22.0,  -2.0 } // mm
+  #define CALIBRATION_OBJECT_DIMENSIONS {  10.0,  10.0,  10.0 } // mm
 
   // Comment out any sides which are unreachable by the probe. For best
   // auto-calibration results, all sides must be reachable.
@@ -915,11 +915,11 @@
 
 #if HAS_LCD_MENU
 
-// Include a page of printer information in the LCD Main Menu
-#define LCD_INFO_MENU
-#if ENABLED(LCD_INFO_MENU)
-  //#define LCD_PRINTER_INFO_IS_BOOTSCREEN // Show bootscreen(s) instead of Printer Info pages
-#endif
+  // Include a page of printer information in the LCD Main Menu
+  #define LCD_INFO_MENU
+  #if ENABLED(LCD_INFO_MENU)
+    //#define LCD_PRINTER_INFO_IS_BOOTSCREEN // Show bootscreen(s) instead of Printer Info pages
+  #endif
 
   // BACK menu items keep the highlight at the top
   //#define TURBO_BACK_MENU_ITEM
@@ -1105,8 +1105,8 @@
    */
   //#define USB_FLASH_DRIVE_SUPPORT
   #if ENABLED(USB_FLASH_DRIVE_SUPPORT)
-    #define USB_CS_PIN         SDSS
-    #define USB_INTR_PIN       SD_DETECT_PIN
+    #define USB_CS_PIN    SDSS
+    #define USB_INTR_PIN  SD_DETECT_PIN
 
     /**
      * USB Host Shield Library
@@ -1530,9 +1530,9 @@
 #define ARC_SUPPORT               // Disable this feature to save ~3226 bytes
 #if ENABLED(ARC_SUPPORT)
   #define MM_PER_ARC_SEGMENT    1 // (mm) Length (or minimum length) of each arc segment
-  #define MIN_ARC_SEGMENTS   24   // Minimum number of segments in a complete circle
+  #define MIN_ARC_SEGMENTS     24 // Minimum number of segments in a complete circle
   //#define ARC_SEGMENTS_PER_SEC 50 // Use feedrate to choose segment length (with MM_PER_ARC_SEGMENT as the minimum)
-  #define N_ARC_CORRECTION   25   // Number of interpolated segments between corrections
+  #define N_ARC_CORRECTION     25 // Number of interpolated segments between corrections
   //#define ARC_P_CIRCLES         // Enable the 'P' parameter to specify complete circles
   //#define CNC_WORKSPACE_PLANES  // Allow G2/G3 to operate in XY, ZX, or YZ planes
 #endif
@@ -1590,10 +1590,10 @@
  *  If undefined, defaults to 1MHz / (2 * MINIMUM_STEPPER_PULSE)
  *  5000000 : Maximum for TMC2xxx stepper drivers
  *  1000000 : Maximum for LV8729 stepper driver
- *  500000 : Maximum for A4988 stepper driver
- *  250000 : Maximum for DRV8825 stepper driver
- *  150000 : Maximum for TB6600 stepper driver
- *   15000 : Maximum for TB6560 stepper driver
+ *  500000  : Maximum for A4988 stepper driver
+ *  250000  : Maximum for DRV8825 stepper driver
+ *  150000  : Maximum for TB6600 stepper driver
+ *   15000  : Maximum for TB6560 stepper driver
  *
  * Override the default value based on the driver type set in Configuration.h.
  */
@@ -1921,100 +1921,100 @@
   #define INTERPOLATE       true  // Interpolate X/Y/Z_MICROSTEPS to 256
 
   #if AXIS_IS_TMC(X)
-    #define X_CURRENT     800  // (mA) RMS current. Multiply by 1.414 for peak current.
+    #define X_CURRENT       800        // (mA) RMS current. Multiply by 1.414 for peak current.
     #define X_CURRENT_HOME  X_CURRENT  // (mA) RMS current for sensorless homing
-    #define X_MICROSTEPS   16  // 0..256
-    #define X_RSENSE     0.11
+    #define X_MICROSTEPS     16    // 0..256
+    #define X_RSENSE          0.11
     #define X_CHAIN_POS      -1    // <=0 : Not chained. 1 : MCU MOSI connected. 2 : Next in chain, ...
   #endif
 
   #if AXIS_IS_TMC(X2)
-    #define X2_CURRENT    800
+    #define X2_CURRENT      800
     #define X2_CURRENT_HOME X2_CURRENT
-    #define X2_MICROSTEPS  16
-    #define X2_RSENSE    0.11
+    #define X2_MICROSTEPS    16
+    #define X2_RSENSE         0.11
     #define X2_CHAIN_POS     -1
   #endif
 
   #if AXIS_IS_TMC(Y)
-    #define Y_CURRENT     800
+    #define Y_CURRENT       800
     #define Y_CURRENT_HOME  Y_CURRENT
-    #define Y_MICROSTEPS   16
-    #define Y_RSENSE     0.11
+    #define Y_MICROSTEPS     16
+    #define Y_RSENSE          0.11
     #define Y_CHAIN_POS      -1
   #endif
 
   #if AXIS_IS_TMC(Y2)
-    #define Y2_CURRENT    800
+    #define Y2_CURRENT      800
     #define Y2_CURRENT_HOME Y2_CURRENT
-    #define Y2_MICROSTEPS  16
-    #define Y2_RSENSE    0.11
+    #define Y2_MICROSTEPS    16
+    #define Y2_RSENSE         0.11
     #define Y2_CHAIN_POS     -1
   #endif
 
   #if AXIS_IS_TMC(Z)
-    #define Z_CURRENT     800
+    #define Z_CURRENT       800
     #define Z_CURRENT_HOME  Z_CURRENT
-    #define Z_MICROSTEPS   16
-    #define Z_RSENSE     0.11
+    #define Z_MICROSTEPS     16
+    #define Z_RSENSE          0.11
     #define Z_CHAIN_POS      -1
   #endif
 
   #if AXIS_IS_TMC(Z2)
-    #define Z2_CURRENT    800
+    #define Z2_CURRENT      800
     #define Z2_CURRENT_HOME Z2_CURRENT
-    #define Z2_MICROSTEPS  16
-    #define Z2_RSENSE    0.11
+    #define Z2_MICROSTEPS    16
+    #define Z2_RSENSE         0.11
     #define Z2_CHAIN_POS     -1
   #endif
 
   #if AXIS_IS_TMC(Z3)
-    #define Z3_CURRENT    800
+    #define Z3_CURRENT      800
     #define Z3_CURRENT_HOME Z3_CURRENT
-    #define Z3_MICROSTEPS  16
-    #define Z3_RSENSE    0.11
+    #define Z3_MICROSTEPS    16
+    #define Z3_RSENSE         0.11
     #define Z3_CHAIN_POS     -1
   #endif
 
   #if AXIS_IS_TMC(E0)
-    #define E0_CURRENT    800
-    #define E0_MICROSTEPS  16
-    #define E0_RSENSE    0.11
+    #define E0_CURRENT      800
+    #define E0_MICROSTEPS    16
+    #define E0_RSENSE         0.11
     #define E0_CHAIN_POS     -1
   #endif
 
   #if AXIS_IS_TMC(E1)
-    #define E1_CURRENT    800
-    #define E1_MICROSTEPS  16
-    #define E1_RSENSE    0.11
+    #define E1_CURRENT      800
+    #define E1_MICROSTEPS    16
+    #define E1_RSENSE         0.11
     #define E1_CHAIN_POS     -1
   #endif
 
   #if AXIS_IS_TMC(E2)
-    #define E2_CURRENT    800
-    #define E2_MICROSTEPS  16
-    #define E2_RSENSE    0.11
+    #define E2_CURRENT      800
+    #define E2_MICROSTEPS    16
+    #define E2_RSENSE         0.11
     #define E2_CHAIN_POS     -1
   #endif
 
   #if AXIS_IS_TMC(E3)
-    #define E3_CURRENT    800
-    #define E3_MICROSTEPS  16
-    #define E3_RSENSE    0.11
+    #define E3_CURRENT      800
+    #define E3_MICROSTEPS    16
+    #define E3_RSENSE         0.11
     #define E3_CHAIN_POS     -1
   #endif
 
   #if AXIS_IS_TMC(E4)
-    #define E4_CURRENT    800
-    #define E4_MICROSTEPS  16
-    #define E4_RSENSE    0.11
+    #define E4_CURRENT      800
+    #define E4_MICROSTEPS    16
+    #define E4_RSENSE         0.11
     #define E4_CHAIN_POS     -1
   #endif
 
   #if AXIS_IS_TMC(E5)
-    #define E5_CURRENT    800
-    #define E5_MICROSTEPS  16
-    #define E5_RSENSE    0.11
+    #define E5_CURRENT      800
+    #define E5_MICROSTEPS    16
+    #define E5_RSENSE         0.11
     #define E5_CHAIN_POS     -1
   #endif
 
@@ -2827,7 +2827,8 @@
 //#define ESP3D_WIFISUPPORT   // ESP3D Library WiFi management (https://github.com/luc-github/ESP3DLib)
 
 #if EITHER(WIFISUPPORT, ESP3D_WIFISUPPORT)
-  #include "Configuration_wifi.h"
+  #define WIFI_SSID "Wifi SSID"
+  #define WIFI_PWD  "Wifi Password"
   //#define WEBSUPPORT          // Start a webserver (which may include auto-discovery)
   //#define OTASUPPORT          // Support over-the-air firmware updates
   //#define WIFI_CUSTOM_COMMAND // Accept feature config commands (e.g., WiFi ESP3D) from the host
