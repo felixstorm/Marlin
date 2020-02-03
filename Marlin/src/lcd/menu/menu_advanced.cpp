@@ -228,29 +228,17 @@ void menu_cancelobject();
 #if ENABLED(PID_AUTOTUNE_MENU)
   #define DEFINE_PIDTEMP_FUNCS(N) \
     _DEFINE_PIDTEMP_BASE_FUNCS(N); \
-    void lcd_autotune_callback_E##N() { _lcd_autotune(N); } //
+    void lcd_autotune_callback_E##N() { _lcd_autotune(N); }
 #else
-  #define DEFINE_PIDTEMP_FUNCS(N) _DEFINE_PIDTEMP_BASE_FUNCS(N); //
+  #define DEFINE_PIDTEMP_FUNCS(N) _DEFINE_PIDTEMP_BASE_FUNCS(N);
 #endif
 
 #if HOTENDS
   DEFINE_PIDTEMP_FUNCS(0);
   #if HOTENDS > 1 && ENABLED(PID_PARAMS_PER_HOTEND)
-    DEFINE_PIDTEMP_FUNCS(1);
-    #if HOTENDS > 2
-      DEFINE_PIDTEMP_FUNCS(2);
-      #if HOTENDS > 3
-        DEFINE_PIDTEMP_FUNCS(3);
-        #if HOTENDS > 4
-          DEFINE_PIDTEMP_FUNCS(4);
-          #if HOTENDS > 5
-            DEFINE_PIDTEMP_FUNCS(5);
-          #endif // HOTENDS > 5
-        #endif // HOTENDS > 4
-      #endif // HOTENDS > 3
-    #endif // HOTENDS > 2
-  #endif // HOTENDS > 1 && PID_PARAMS_PER_HOTEND
-#endif // HOTENDS
+    REPEAT_S(1, HOTENDS, DEFINE_PIDTEMP_FUNCS)
+  #endif
+#endif
 
 #define SHOW_MENU_ADVANCED_TEMPERATURE ((ENABLED(AUTOTEMP) && HAS_TEMP_HOTEND) || EITHER(PID_AUTOTUNE_MENU, PID_EDIT_MENU))
 
@@ -300,7 +288,7 @@ void menu_cancelobject();
       #if ENABLED(PID_FAN_SCALING)
         #define _PID_EDIT_MENU_ITEMS(N) \
           _PID_BASE_MENU_ITEMS(N); \
-          EDIT_ITEM(float3, PID_LABEL(MSG_PID_F,N), &PID_PARAM(Kf, N), 1, 9990)
+          EDIT_ITEM_N(float3, N, MSG_PID_F_E, &PID_PARAM(Kf, N), 1, 9990)
       #else
         #define _PID_EDIT_MENU_ITEMS(N) _PID_BASE_MENU_ITEMS(N)
       #endif
@@ -314,27 +302,15 @@ void menu_cancelobject();
     #if ENABLED(PID_AUTOTUNE_MENU)
       #define PID_EDIT_MENU_ITEMS(N) \
         _PID_EDIT_MENU_ITEMS(N); \
-        EDIT_ITEM_FAST_N(int3, N, MSG_PID_AUTOTUNE_E, &autotune_temp[N], 150, heater_maxtemp[N] - 15, []{ _lcd_autotune(MenuItemBase::itemIndex); })
+        EDIT_ITEM_FAST_N(int3, N, MSG_PID_AUTOTUNE_E, &autotune_temp[N], 150, heater_maxtemp[N] - 15, []{ _lcd_autotune(MenuItemBase::itemIndex); });
     #else
-      #define PID_EDIT_MENU_ITEMS(N) _PID_EDIT_MENU_ITEMS(N)
+      #define PID_EDIT_MENU_ITEMS(N) _PID_EDIT_MENU_ITEMS(N);
     #endif
 
     PID_EDIT_MENU_ITEMS(0);
     #if HOTENDS > 1 && ENABLED(PID_PARAMS_PER_HOTEND)
-      PID_EDIT_MENU_ITEMS(1);
-      #if HOTENDS > 2
-        PID_EDIT_MENU_ITEMS(2);
-        #if HOTENDS > 3
-          PID_EDIT_MENU_ITEMS(3);
-          #if HOTENDS > 4
-            PID_EDIT_MENU_ITEMS(4);
-            #if HOTENDS > 5
-              PID_EDIT_MENU_ITEMS(5);
-            #endif // HOTENDS > 5
-          #endif // HOTENDS > 4
-        #endif // HOTENDS > 3
-      #endif // HOTENDS > 2
-    #endif // HOTENDS > 1 && PID_PARAMS_PER_HOTEND
+      REPEAT_S(1, HOTENDS, PID_EDIT_MENU_ITEMS)
+    #endif
 
     END_MENU();
   }
@@ -485,9 +461,11 @@ void menu_cancelobject();
     void menu_probe_offsets() {
       START_MENU();
       BACK_ITEM(MSG_ADVANCED_SETTINGS);
-      EDIT_ITEM(float51sign, MSG_ZPROBE_XOFFSET, &probe_offset.x, -(X_BED_SIZE), X_BED_SIZE);
-      EDIT_ITEM(float51sign, MSG_ZPROBE_YOFFSET, &probe_offset.y, -(Y_BED_SIZE), Y_BED_SIZE);
-      EDIT_ITEM(LCD_Z_OFFSET_TYPE, MSG_ZPROBE_ZOFFSET, &probe_offset.z, Z_PROBE_OFFSET_RANGE_MIN, Z_PROBE_OFFSET_RANGE_MAX);
+      #if HAS_PROBE_XY_OFFSET
+        EDIT_ITEM(float51sign, MSG_ZPROBE_XOFFSET, &probe.offset.x, -(X_BED_SIZE), X_BED_SIZE);
+        EDIT_ITEM(float51sign, MSG_ZPROBE_YOFFSET, &probe.offset.y, -(Y_BED_SIZE), Y_BED_SIZE);
+      #endif
+      EDIT_ITEM(LCD_Z_OFFSET_TYPE, MSG_ZPROBE_ZOFFSET, &probe.offset.z, Z_PROBE_OFFSET_RANGE_MIN, Z_PROBE_OFFSET_RANGE_MAX);
       END_MENU();
     }
   #endif

@@ -332,10 +332,12 @@
 //
 // Espressif ESP32 WiFi
 //
-#define BOARD_ESPRESSIF_ESP32         6000
+#define BOARD_ESP32_FS_ENDER3         6815
+
+#define BOARD_ESPRESSIF_ESP32         6000  // Generic ESP32
 #define BOARD_MRR_ESPA                6001
 #define BOARD_MRR_ESPE                6002
-#define BOARD_ESP32_FS_ENDER3         6815
+#define BOARD_E4D_BOX                 6003  // E4d@BOX
 
 //
 // Simulations

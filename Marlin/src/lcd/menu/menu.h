@@ -30,7 +30,7 @@
 extern int8_t encoderLine, encoderTopLine, screen_items;
 
 #if HOTENDS
-  constexpr int16_t heater_maxtemp[HOTENDS] = ARRAY_BY_HOTENDS(HEATER_0_MAXTEMP, HEATER_1_MAXTEMP, HEATER_2_MAXTEMP, HEATER_3_MAXTEMP, HEATER_4_MAXTEMP, HEATER_5_MAXTEMP);
+  constexpr int16_t heater_maxtemp[HOTENDS] = ARRAY_BY_HOTENDS(HEATER_0_MAXTEMP, HEATER_1_MAXTEMP, HEATER_2_MAXTEMP, HEATER_3_MAXTEMP, HEATER_4_MAXTEMP, HEATER_5_MAXTEMP, HEATER_6_MAXTEMP, HEATER_7_MAXTEMP);
 #endif
 
 void scroll_screen(const uint8_t limit, const bool is_menu);
@@ -324,7 +324,7 @@ class MenuItem_bool : public MenuEditItemBase {
 #define SCREEN_OR_MENU_LOOP(IS_MENU)                \
   scroll_screen(IS_MENU ? 1 : LCD_HEIGHT, IS_MENU); \
   int8_t _menuLineNr = encoderTopLine, _thisItemNr; \
-  bool _skipStatic = IS_MENU;                       \
+  bool _skipStatic = IS_MENU; UNUSED(_thisItemNr);  \
   for (int8_t _lcdLineNr = 0; _lcdLineNr < LCD_HEIGHT; _lcdLineNr++, _menuLineNr++) { \
     _thisItemNr = 0
 
