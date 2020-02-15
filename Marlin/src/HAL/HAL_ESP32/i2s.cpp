@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2020 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
@@ -153,8 +153,8 @@ void stepperTask(void* parameter) {
         remaining--;
       }
       else {
-        Stepper::stepper_pulse_phase_isr();
-        remaining = Stepper::stepper_block_phase_isr();
+        Stepper::pulse_phase_isr();
+        remaining = Stepper::block_phase_isr();
       }
     }
   }
