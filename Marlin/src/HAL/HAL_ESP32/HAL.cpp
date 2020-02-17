@@ -42,6 +42,8 @@
   #endif
 #endif
 
+#include "Esp32Logging.hpp"
+
 // ------------------------
 // Externs
 // ------------------------
@@ -114,6 +116,13 @@ void HAL_idletask() {
   #if ENABLED(ESP3D_WIFISUPPORT)
     esp3dlib.idletask();
   #endif
+
+  // static millis_t millisLastDebugFsDisplay = 0;
+  // millis_t now = millis();
+  // if (now - millisLastDebugFsDisplay > 5000) {
+  //   Esp32Logging::LogTaskStats(ESP_LOG_ERROR);
+  //   millisLastDebugFsDisplay = now;
+  // }
 }
 
 void HAL_clear_reset_source() { }
